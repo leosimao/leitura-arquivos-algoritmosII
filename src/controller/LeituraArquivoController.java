@@ -6,7 +6,14 @@ import java.io.FileReader;
 
 public class LeituraArquivoController {
 
-    public Double getMediaFinal(FileReader arquivo){
-        return LeituraArquivoService.getMediaCalculada(arquivo);
+    private LeituraArquivoService leituraArquivoService = new LeituraArquivoService();
+    private FileReader leituraArquivo;
+
+    public LeituraArquivoController(FileReader leituraArquivo){
+        this.leituraArquivo = leituraArquivo;
+        this.getMediaFinal();
+    }
+    public Double getMediaFinal(){
+        return leituraArquivoService.getMediaCalculada(leituraArquivo);
     }
 }
