@@ -7,6 +7,11 @@ public class DisciplinaAnoDTO {
     private int anoVigente;
     private Map<String, List<Integer>> notasDisciplina;
 
+    public DisciplinaAnoDTO(int anoVigente, Map<String, List<Integer>> notasDisciplina){
+        this.anoVigente = anoVigente;
+        this.notasDisciplina = notasDisciplina;
+    }
+
     public int getAnoVigente() {
         return anoVigente;
     }

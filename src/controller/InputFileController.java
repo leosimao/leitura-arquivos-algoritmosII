@@ -11,7 +11,7 @@ public class InputFileController {
     public InputFileController(FileReader leituraArquivo){
         this.inputFileService = new InputFileService(leituraArquivo);
     }
-    public Double getMediaFinal(){
-        return inputFileService.getMediaDisciplinaAno();
+    public void getMediaDisciplinaAno(){
+        inputFileService.getMediaDisciplina();
     }
 }

@@ -2,13 +2,16 @@ package model.service;
 
 import model.dto.DadosArquivoDTO;
 import model.dto.DisciplinaAnoDTO;
+import model.dto.DisciplinaDTO;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.lang.reflect.Field;
+import java.rmi.MarshalledObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InputFileService {
@@ -19,9 +22,20 @@ public class InputFileService {
         this.leituraArquivos = converterArquivoToDadoArquivo(leituraArquivo);
     }
 
-    public Double getMediaDisciplinaAno(){
+    public void getMediaDisciplinaAno(){
+        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
+    }
 
-        return 0.0;
+    public void getMedianaDisciplinaAno(){
+        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
+    }
+
+    public void getDesvioPadraoDisciplinaAno(){
+        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
+    }
+
+    public void getMediaDisciplina(){
+        List<DisciplinaDTO> listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
     }
 
     private List<DadosArquivoDTO> converterArquivoToDadoArquivo(FileReader arquivo) {
@@ -41,9 +55,41 @@ public class InputFileService {
         return listaDadosArquivoDto;
     }
 
-    private void converterDadosArquivosToDisciplinaAno(List<DadosArquivoDTO> dadosArquivo){
-        List<Integer> anosVigente = dadosArquivo.stream().map(DadosArquivoDTO::getAnoVigente)
+    private List<DisciplinaAnoDTO> converterDadosArquivosToDisciplinaAno(List<DadosArquivoDTO> dadosArquivo){
+        return dadosArquivo.stream()
+                .collect(Collectors.groupingBy(DadosArquivoDTO::getAnoVigente))
+                .entrySet().stream()
+                .map(fluxoMap -> new DisciplinaAnoDTO(fluxoMap.getKey(), this.converterNotasToLinha(fluxoMap.getValue())))
+                .collect(Collectors.toList());
+    }
+
+    private List<DisciplinaDTO> converterDadosArquivosToDisciplina(List<DadosArquivoDTO> dadosArquivo){
+        return dadosArquivo.stream()
+                .map(montarDto -> new DisciplinaDTO(this.converterNotasToLinha(dadosArquivo)))
                 .distinct()
                 .collect(Collectors.toList());
     }
+
+    private Map<String, List<Integer>> converterNotasToLinha(List<DadosArquivoDTO> dadosArquivoFiltrado){
+        Map<String, List<Integer>> mapNotas = new HashMap<>();
+        mapNotas.putIfAbsent("notaMateria1", dadosArquivoFiltrado.stream()
+                .map(DadosArquivoDTO::getNotaMateria1)
+                .collect(Collectors.toList()));
+
+        mapNotas.putIfAbsent("notaMateria2", dadosArquivoFiltrado.stream()
+                .map(DadosArquivoDTO::getNotaMateria2)
+                .collect(Collectors.toList()));
+
+        mapNotas.putIfAbsent("notaMateria3", dadosArquivoFiltrado.stream()
+                .map(DadosArquivoDTO::getNotaMateria3)
+                .collect(Collectors.toList()));
+
+        mapNotas.putIfAbsent("notaMateria4", dadosArquivoFiltrado.stream()
+                .map(DadosArquivoDTO::getNotaMateria3)
+                .collect(Collectors.toList()));
+
+        return mapNotas;
+    }
+
+
 }
