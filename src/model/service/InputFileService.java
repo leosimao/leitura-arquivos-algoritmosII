@@ -1,6 +1,7 @@
 package model.service;
 
 import model.dto.DadosArquivoDTO;
+import model.dto.DesempenhoAlunoDTO;
 import model.dto.DisciplinaAnoDTO;
 import model.dto.DisciplinaDTO;
 
@@ -24,6 +25,7 @@ public class InputFileService {
 
     public void getMediaDisciplinaAno(){
         List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
+
     }
 
     public void getMedianaDisciplinaAno(){
@@ -35,7 +37,20 @@ public class InputFileService {
     }
 
     public void getMediaDisciplina(){
-        List<DisciplinaDTO> listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
+        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
+    }
+
+    public void getMedianoDisciplina(){
+        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
+    }
+
+    public void getDesvioPadraoDisciplina(){
+        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
+
+    }
+
+    public void getDesempenhoAluno(){
+        List<DesempenhoAlunoDTO> listaDesempenhoAluno = this.converterDadosArquivosToDesempenhoAluno(leituraArquivos);
     }
 
     private List<DadosArquivoDTO> converterArquivoToDadoArquivo(FileReader arquivo) {
@@ -63,10 +78,15 @@ public class InputFileService {
                 .collect(Collectors.toList());
     }
 
-    private List<DisciplinaDTO> converterDadosArquivosToDisciplina(List<DadosArquivoDTO> dadosArquivo){
+    private DisciplinaDTO converterDadosArquivosToDisciplina(List<DadosArquivoDTO> dadosArquivo){
+        return new DisciplinaDTO(this.converterNotasToLinha(dadosArquivo));
+    }
+
+    private List<DesempenhoAlunoDTO> converterDadosArquivosToDesempenhoAluno(List<DadosArquivoDTO> dadosArquivo){
         return dadosArquivo.stream()
-                .map(montarDto -> new DisciplinaDTO(this.converterNotasToLinha(dadosArquivo)))
-                .distinct()
+                .collect(Collectors.groupingBy(DadosArquivoDTO::getIdAluno))
+                .entrySet().stream()
+                .map(fluxoMap -> new DesempenhoAlunoDTO(fluxoMap.getKey(), this.converterNotasToLinha(fluxoMap.getValue())))
                 .collect(Collectors.toList());
     }
 
@@ -91,5 +111,20 @@ public class InputFileService {
         return mapNotas;
     }
 
+    private void getMedia(Map<String, List<Integer>> mapNotas){
+        Map<String, Integer> mediaCalculada = new HashMap<>();
+        for(Map.Entry<String, List<Integer>> mapNota : mapNotas.entrySet()){
+            String chaveMap = mapNota.getKey();
+            List<Integer> valoresMap = mapNota.getValue();
+            int somaValores = 0;
+            for (int valor: valoresMap) {
+                somaValores += valor;
+            }
+
+            int calculoMedia = somaValores / valoresMap.size();
+
+            mediaCalculada.put(chaveMap, calculoMedia);
+        }
+    }
 
 }

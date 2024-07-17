@@ -12,6 +12,6 @@ public class InputFileController {
         this.inputFileService = new InputFileService(leituraArquivo);
     }
     public void getMediaDisciplinaAno(){
-        inputFileService.getMediaDisciplina();
+        inputFileService.getDesempenhoAluno();
     }
 }
