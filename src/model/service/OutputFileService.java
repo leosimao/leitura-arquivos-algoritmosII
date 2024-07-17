@@ -2,9 +2,10 @@ package model.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class OutputFileService {
-    private final String pathOutputFile = "src\\resources\\output\\teste2.txt";
+    private final String pathOutputFile = "src\\resources\\output\\nota_aluno_formatada_" + LocalDate.now() + ".txt";
 
     public OutputFileService(){
         this.criarArquivo();

@@ -1,4 +1,5 @@
 import controller.InputFileController;
+import model.service.OutputFileService;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,5 +10,6 @@ public class IniciarProjeto {
         FileReader leituraArquivo = new FileReader(filePath);
         InputFileController leituraController = new InputFileController(leituraArquivo);
         leituraController.getMediaDisciplinaAno();
+        OutputFileService outputFileService = new OutputFileService();
     }
 }
