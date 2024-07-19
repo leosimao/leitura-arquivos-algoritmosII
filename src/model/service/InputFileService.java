@@ -18,39 +18,38 @@ import java.util.stream.Collectors;
 public class InputFileService {
 
     private List<DadosArquivoDTO> leituraArquivos;
+    private DisciplinaDTO notasDisciplinas;
+    private List<DisciplinaAnoDTO> notasDisciplinasAnos;
+    private List<DesempenhoAlunoDTO> notasDesempenhoAlunos;
 
     public InputFileService(FileReader leituraArquivo){
         this.leituraArquivos = converterArquivoToDadoArquivo(leituraArquivo);
+        this.notasDisciplinas = this.converterDadosArquivosToDisciplina(leituraArquivos);
+        this.notasDisciplinasAnos = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
+        this.notasDesempenhoAlunos = this.converterDadosArquivosToDesempenhoAluno(leituraArquivos);
     }
 
     public void getMediaDisciplinaAno(){
-        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
 
     }
 
     public void getMedianaDisciplinaAno(){
-        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
     }
 
     public void getDesvioPadraoDisciplinaAno(){
-        List<DisciplinaAnoDTO> listaDisciplinaAno = this.converterDadosArquivosToDisciplinaAno(leituraArquivos);
     }
 
     public void getMediaDisciplina(){
-        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
     }
 
     public void getMedianoDisciplina(){
-        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
     }
 
     public void getDesvioPadraoDisciplina(){
-        DisciplinaDTO listaNotaDisciplina = this.converterDadosArquivosToDisciplina(leituraArquivos);
 
     }
 
     public void getDesempenhoAluno(){
-        List<DesempenhoAlunoDTO> listaDesempenhoAluno = this.converterDadosArquivosToDesempenhoAluno(leituraArquivos);
     }
 
     private List<DadosArquivoDTO> converterArquivoToDadoArquivo(FileReader arquivo) {
@@ -111,7 +110,7 @@ public class InputFileService {
         return mapNotas;
     }
 
-    private void getMedia(Map<String, List<Integer>> mapNotas){
+    private Map<String, Integer> getMedia(Map<String, List<Integer>> mapNotas){
         Map<String, Integer> mediaCalculada = new HashMap<>();
         for(Map.Entry<String, List<Integer>> mapNota : mapNotas.entrySet()){
             String chaveMap = mapNota.getKey();
@@ -125,6 +124,8 @@ public class InputFileService {
 
             mediaCalculada.put(chaveMap, calculoMedia);
         }
+
+        return mediaCalculada;
     }
 
 }
